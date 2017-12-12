@@ -6,6 +6,7 @@ import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -24,6 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 @Mod(
         modid = Ticworkaround.MOD_ID,
@@ -61,7 +63,7 @@ public class Ticworkaround {
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 boolean br = args.length > 0 && args[0].equals("break");
                 EntityPlayerMP target = args.length > (br ? 1 : 0) ? getPlayer(server, sender, args[br ? 1 : 0]) : getCommandSenderAsPlayer(sender);
-                ItemStack is = ToolHelper.playerIsHoldingItemWith(target, iss -> !iss.isEmpty() && iss.getItem() instanceof TinkersItem);
+                ItemStack is = /*ToolHelper.*/playerIsHoldingItemWith(target, iss -> !iss.isEmpty() && iss.getItem() instanceof TinkersItem);
                 if (is.isEmpty()) {
                     sender.sendMessage(new TextComponentString(target.getDisplayNameString() + " has no tool in hand."));
                 } else if (br) {
@@ -104,5 +106,17 @@ public class Ticworkaround {
                 }
             }
         });
+    }
+
+    /* From TiC's ToolHelper in newer versions */
+    private static ItemStack playerIsHoldingItemWith(EntityPlayer player, Predicate<ItemStack> predicate) {
+        ItemStack tool = player.getHeldItemMainhand();
+        if (!predicate.test(tool)) {
+            tool = player.getHeldItemOffhand();
+            if (!predicate.test(tool)) {
+                return ItemStack.EMPTY;
+            }
+        }
+        return tool;
     }
 }
