@@ -1,0 +1,20 @@
+[
+  {
+    "modid": "ticworkaround",
+    "name": "Ticworkaround",
+    "description": "Ugly workaround TiC bug",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "Bluexin"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": [
+      ""
+    ]
+  }
+]
